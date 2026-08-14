@@ -1,292 +1,84 @@
-{
---bg: #0F0F0F;
---panel: #171717;
---panel2: #1F1F1F;
---gold: #F5C542;
---text: #F8F8F8;
---muted: #A0A0A0;
---border: #2A2A2A;
+const db = {
+run: [
+{ cat: 'Home', en: 'run the washing machine', tr: 'Çamaşır makinesini çalıştırmak' },
+{ cat: 'Work', en: 'run a meeting', tr: 'Toplantıyı yönetmek' },
+{ cat: 'Technology', en: 'run a program', tr: 'Bir programı çalıştırmak' },
+{ cat: 'Daily', en: 'run late', tr: 'Geç kalmak' }
+],
+make: [
+{ cat: 'Decision', en: 'make a decision', tr: 'Karar vermek' },
+{ cat: 'Progress', en: 'make progress', tr: 'İlerleme kaydetmek' },
+{ cat: 'Check', en: 'make sure', tr: 'Emin olmak' }
+],
+get: [
+{ cat: 'Home', en: 'get home', tr: 'Eve varmak' },
+{ cat: 'Work', en: 'get promoted', tr: 'Terfi almak' },
+{ cat: 'Emotion', en: 'get upset', tr: 'Üzülmek' },
+{ cat: 'Daily', en: 'get used to', tr: 'Alışmak' }
+]
+};
+
+const texts = {
+tr: {
+title: 'English Master Dashboard',
+subtitle: 'Bağlam içinde İngilizce öğren',
+search: 'Bir kelime yaz: get, run, make, take...',
+start: 'Çalışmaya Başla'
+},
+en: {
+title: 'English Master Dashboard',
+subtitle: 'Learn English through context',
+search: 'Type a word: get, run, make, take...',
+start: 'Start Studying'
+}
+};
+
+let currentLang = 'tr';
+
+function render(word) {
+const container = document.getElementById('contextResults');
+if (!container) return;
+
+if (!word) {
+container.innerHTML = <div class="context-item"> <div class="context-tag">TR</div> <div class="context-text"> <strong>Bağlam Gezgini</strong> <p>Bir kelime yazarak farklı kullanımlarını gör.</p> </div> </div>;
+return;
 }
 
-{
-margin: 0;
-padding: 0;
-box-sizing: border-box;
+const list = db[word.toLowerCase()] || [];
+
+if (list.length === 0) {
+container.innerHTML = <div class="context-item"> <div class="context-tag">—</div> <div class="context-text"> <strong>Sonuç bulunamadı</strong> <p>Şimdilik bu kelime veritabanında yok.</p> </div> </div>;
+return;
 }
 
-body {
-background: var(--bg);
-color: var(--text);
-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+container.innerHTML = list.map(item => <div class="context-item"> <div class="context-tag">${item.cat}</div> <div class="context-text"> <strong>${item.en}</strong> <p>${item.tr}</p> </div> </div>).join('');
 }
 
-.app {
-display: flex;
-min-height: 100vh;
+function setLang(lang) {
+currentLang = lang;
+
+document.getElementById('trBtn').classList.toggle('active', lang === 'tr');
+document.getElementById('enBtn').classList.toggle('active', lang === 'en');
+
+document.getElementById('pageTitle').textContent = texts[lang].title;
+document.getElementById('pageSubtitle').textContent = texts[lang].subtitle;
+document.getElementById('searchInput').placeholder = texts[lang].search;
+
+const btn = document.querySelector('.start-btn');
+if (btn) btn.textContent = texts[lang].start;
 }
 
-.sidebar {
-width: 260px;
-background: #121212;
-border-right: 1px solid var(--border);
-padding: 24px;
+document.addEventListener('DOMContentLoaded', () => {
+const input = document.getElementById('searchInput');
+
+if (input) {
+input.addEventListener('input', (e) => {
+render(e.target.value);
+});
 }
 
-.logo {
-display: flex;
-align-items: center;
-gap: 14px;
-margin-bottom: 30px;
-}
+document.getElementById('trBtn').addEventListener('click', () => setLang('tr'));
+document.getElementById('enBtn').addEventListener('click', () => setLang('en'));
 
-.logo-circle {
-width: 50px;
-height: 50px;
-border-radius: 14px;
-background: var(--gold);
-color: #111;
-display: flex;
-align-items: center;
-justify-content: center;
-font-weight: 800;
-}
-
-.logo h1 {
-color: var(--gold);
-font-size: 20px;
-}
-
-.logo p {
-color: var(--muted);
-font-size: 14px;
-}
-
-.menu {
-display: flex;
-flex-direction: column;
-gap: 10px;
-}
-
-.menu-item {
-background: transparent;
-border: 1px solid transparent;
-color: var(--text);
-padding: 12px 14px;
-border-radius: 14px;
-text-align: left;
-cursor: pointer;
-}
-
-.menu-item.active,
-.menu-item {
-background: var(--panel2);
-border-color: var(--border);
-color: var(--gold);
-}
-
-.content {
-flex: 1;
-padding: 28px;
-}
-
-.topbar {
-display: flex;
-justify-content: space-between;
-align-items: center;
-margin-bottom: 24px;
-}
-
-.topbar h2 {
-color: var(--gold);
-}
-
-.topbar p {
-color: var(--muted);
-}
-
-.language-toggle {
-display: flex;
-background: var(--panel);
-border: 1px solid var(--border);
-border-radius: 999px;
-padding: 4px;
-}
-
-.language-toggle button {
-background: transparent;
-border: none;
-color: var(--text);
-padding: 10px 16px;
-border-radius: 999px;
-cursor: pointer;
-}
-
-.language-toggle button.active {
-background: var(--gold);
-color: #111;
-font-weight: 700;
-}
-
-.hero {
-background: linear-gradient(135deg, #1a1a1a, #111);
-border: 1px solid var(--border);
-border-radius: 24px;
-padding: 28px;
-display: flex;
-justify-content: space-between;
-align-items: center;
-margin-bottom: 24px;
-}
-
-.hero h3 {
-color: var(--gold);
-margin-bottom: 8px;
-}
-
-.hero p {
-color: var(--muted);
-}
-
-.start-btn {
-background: var(--gold);
-color: #111;
-border: none;
-padding: 14px 20px;
-border-radius: 14px;
-font-weight: 700;
-cursor: pointer;
-}
-
-.stats {
-display: grid;
-grid-template-columns: repeat(4, 1fr);
-gap: 16px;
-margin-bottom: 24px;
-}
-
-.stat-card {
-background: var(--panel);
-border: 1px solid var(--border);
-border-radius: 18px;
-padding: 20px;
-}
-
-.stat-card span {
-color: var(--muted);
-display: block;
-margin-bottom: 10px;
-}
-
-.stat-card strong {
-color: var(--gold);
-font-size: 28px;
-}
-
-.context-panel {
-background: var(--panel);
-border: 1px solid var(--border);
-border-radius: 22px;
-padding: 22px;
-margin-bottom: 24px;
-}
-
-.section-header {
-display: flex;
-justify-content: space-between;
-margin-bottom: 16px;
-}
-
-.section-header span {
-color: var(--muted);
-}
-
-#searchInput {
-width: 100%;
-background: #101010;
-border: 1px solid var(--border);
-color: var(--text);
-padding: 14px;
-border-radius: 14px;
-margin-bottom: 16px;
-}
-
-.context-results {
-display: flex;
-flex-direction: column;
-gap: 12px;
-}
-
-.context-item {
-display: flex;
-gap: 16px;
-background: #131313;
-border: 1px solid var(--border);
-border-radius: 16px;
-padding: 16px;
-}
-
-.context-tag {
-min-width: 70px;
-color: var(--gold);
-font-weight: 700;
-}
-
-.context-text strong {
-display: block;
-margin-bottom: 6px;
-}
-
-.context-text p {
-color: var(--muted);
-}
-
-.daily-grid {
-display: grid;
-grid-template-columns: repeat(2, 1fr);
-gap: 18px;
-}
-
-.daily-card {
-background: var(--panel);
-border: 1px solid var(--border);
-border-radius: 18px;
-padding: 20px;
-}
-
-.daily-card h4 {
-color: var(--gold);
-margin-bottom: 12px;
-}
-
-.daily-card ul {
-padding-left: 18px;
-color: var(--muted);
-}
-
-.daily-card li {
-margin-bottom: 8px;
-}
-
-@media (max-width: 900px) {
-.app {
-flex-direction: column;
-}
-
-.sidebar {
-width: 100%;
-}
-
-.hero {
-flex-direction: column;
-align-items: flex-start;
-gap: 16px;
-}
-
-.stats {
-grid-template-columns: repeat(2, 1fr);
-}
-
-.daily-grid {
-grid-template-columns: 1fr;
-}
-}
+render('');
+});
