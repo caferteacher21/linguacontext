@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LinguaContext Cafer</title>
+<style>
+:root{
+  --bg:#0F0F0F;
+  --panel:#171717;
+  --gold:#F5C542;
+  --text:#F8F8F8;
+  --muted:#A0A0A0;
+  --border:#2A2A2A;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+header{
+  background:#121212;
+  padding:20px;
+  border-bottom:1px solid var(--border);
+}
+header h1{
+  margin:0;
+  color:var(--gold);
+}
+header p{
+  margin:6px 0 0;
+  color:var(--muted);
+}
+.container{
+  max-width:1100px;
+  margin:auto;
+  padding:24px;
+}
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+}
+.toggle{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:999px;
+  padding:6px;
+  display:flex;
+  gap:6px;
+}
+.toggle button{
+  background:transparent;
+  color:var(--text);
+  border:none;
+  padding:10px 16px;
+  border-radius:999px;
+  cursor:pointer;
+}
+.toggle button.active{
+  background:var(--gold);
+  color:#111;
+  font-weight:700;
+}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:16px;
+}
+.card{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:20px;
+}
+.card h3{
+  margin-top:0;
+  color:var(--gold);
+}
+input{
+  width:100%;
+  padding:14px;
+  background:#101010;
+  color:var(--text);
+  border:1px solid var(--border);
+  border-radius:12px;
+}
+.context{
+  margin-top:16px;
+}
+.item{
+  padding:14px 0;
+  border-bottom:1px solid var(--border);
+}
+.item:last-child{
+  border-bottom:none;
+}
+.cat{
+  color:var(--gold);
+  font-weight:600;
+}
+.en{
+  margin-top:6px;
+  font-size:18px;
+}
+.tr{
+  color:var(--muted);
+  margin-top:4px;
+}
+.stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:16px;
+  margin-bottom:20px;
+}
+.stat{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:18px;
+}
+.stat .label{
+  color:var(--muted);
+  font-size:14px;
+}
+.stat .value{
+  color:var(--gold);
+  font-size:28px;
+  font-weight:700;
+  margin-top:8px;
+}
+@media(max-width:768px){
+  .stats{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<header>
+  <h1 id="title">LinguaContext Cafer</h1>
+  <p id="subtitle">Master English through real context</p>
+</header>
+<div class="container">
+  <div class="topbar">
+    <h2 id="dashboardTitle">English Master Dashboard</h2>
+<div class="toggle">
+  <button id="trBtn" class="active" onclick="setLang('tr')">TR</button>
+  <button id="enBtn" onclick="setLang('en')">EN</button>
+</div>
+  </div>
+  <div class="stats">
+    <div class="stat">
+      <div class="label" id="streakLabel">Çalışma Serisi</div>
+      <div class="value">1</div>
+    </div>
+<div class="stat">
+  <div class="label" id="goalLabel">Bugünkü Hedef</div>
+  <div class="value">20</div>
+</div>
+<div class="stat">
+  <div class="label" id="contextLabel">Bağlam</div>
+  <div class="value">4</div>
+</div>
+  </div>
+  <div class="card">
+    <h3 id="explorerTitle">Bağlam Gezgini</h3>
+    <input id="search" placeholder="Bir kelime yaz (run, make, get)">
+<div id="results" class="context"></div>
+  </div>
+  <div style="height:20px"></div>
+  <div class="grid">
+<div class="card">
+  <h3 id="homeTitle">Evde İngilizce</h3>
+  <p>I’m doing the laundry.</p>
+  <p>Could you set the table?</p>
+  <p>The food is almost ready.</p>
+</div>
+<div class="card">
+  <h3 id="workTitle">İşte İngilizce</h3>
+  <p>Let’s schedule a meeting.</p>
+  <p>I’ll send the report.</p>
+  <p>Could you clarify that point?</p>
+</div>
+<div class="card">
+  <h3 id="outsideTitle">Dışarıda İngilizce</h3>
+  <p>Can I pay by card?</p>
+  <p>I’m just looking.</p>
+  <p>Where is the nearest station?</p>
+</div>
+<div class="card">
+  <h3 id="travelTitle">Seyahat İngilizcesi</h3>
+  <p>I have a reservation.</p>
+  <p>Where is the boarding gate?</p>
+  <p>Could I have a window seat?</p>
+</div>
+  </div>
+</div>
+<script>
+const db = {
+  run:[
+    {cat:"Ev", en:"run the washing machine", tr:"Çamaşır makinesini çalıştırmak"},
+    {cat:"İş", en:"run a meeting", tr:"Toplantıyı yönetmek"},
+    {cat:"Teknoloji", en:"run a program", tr:"Bir programı çalıştırmak"},
+    {cat:"Günlük", en:"run late", tr:"Geç kalmak"}
+  ],
+  make:[
+    {cat:"Karar", en:"make a decision", tr:"Karar vermek"},
+    {cat:"İlerleme", en:"make progress", tr:"İlerleme kaydetmek"},
+    {cat:"Kontrol", en:"make sure", tr:"Emin olmak"}
+  ],
+  get:[
+    {cat:"Ev", en:"get home", tr:"Eve varmak"},
+    {cat:"İş", en:"get promoted", tr:"Terfi almak"},
+    {cat:"Duygu", en:"get upset", tr:"Üzülmek"},
+    {cat:"Günlük", en:"get used to", tr:"Alışmak"}
+  ]
+};
+const texts = {
+  tr:{
+    dashboard:"English Master Dashboard",
+    explorer:"Bağlam Gezgini",
+    placeholder:"Bir kelime yaz (run, make, get)",
+    home:"Evde İngilizce",
+    work:"İşte İngilizce",
+    outside:"Dışarıda İngilizce",
+    travel:"Seyahat İngilizcesi",
+    streak:"Çalışma Serisi",
+    goal:"Bugünkü Hedef",
+    context:"Bağlam"
+  },
+  en:{
+    dashboard:"English Master Dashboard",
+    explorer:"Context Explorer",
+    placeholder:"Type a word (run, make, get)",
+    home:"English at Home",
+    work:"English at Work",
+    outside:"English Outside",
+    travel:"Travel English",
+    streak:"Study Streak",
+    goal:"Today’s Goal",
+    context:"Contexts"
+  }
+};
+function render(word){
+  const results = document.getElementById("results");
+  const list = db[word.toLowerCase()] || [];
+  if(!word){
+    results.innerHTML = "";
+    return;
+  }
+  if(list.length===0){
+    results.innerHTML = "<div class='item'>No context found.</div>";
+    return;
+  }
+  results.innerHTML = list.map(i=>`
+    <div class="item">
+      <div class="cat">${i.cat}</div>
+      <div class="en">${i.en}</div>
+      <div class="tr">${i.tr}</div>
+    </div>
+  `).join("");
+}
+document.getElementById("search").addEventListener("input",e=>{
+  render(e.target.value);
+});
+function setLang(lang){
+  document.getElementById("trBtn").classList.toggle("active",lang==="tr");
+  document.getElementById("enBtn").classList.toggle("active",lang==="en");
+  const t = texts[lang];
+  document.getElementById("dashboardTitle").textContent = t.dashboard;
+  document.getElementById("explorerTitle").textContent = t.explorer;
+  document.getElementById("search").placeholder = t.placeholder;
+  document.getElementById("homeTitle").textContent = t.home;
+  document.getElementById("workTitle").textContent = t.work;
+  document.getElementById("outsideTitle").textContent = t.outside;
+  document.getElementById("travelTitle").textContent = t.travel;
+  document.getElementById("streakLabel").textContent = t.streak;
+  document.getElementById("goalLabel").textContent = t.goal;
+  document.getElementById("contextLabel").textContent = t.context;
+}
+</script>
+</body>
+</html>
