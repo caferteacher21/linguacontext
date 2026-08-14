@@ -1,141 +1,340 @@
 <!DOCTYPE html>
-
-<html lang="tr"> <head> <meta charset="UTF-8" /> <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <title>LinguaContext Cafer</title> <link rel="manifest" href="manifest.json" /> <link rel="stylesheet" href="style.css?v=2" /> </head> <body> <div class="app"> <aside class="sidebar"> <div class="logo"> <div class="logo-circle">LC</div> <div> <h1>LinguaContext</h1> <p>Cafer</p> </div> </div>
-
-  <nav class="menu">
-    <button class="menu-item active">Dashboard</button>
-    <button class="menu-item">Çeviri</button>
-    <button class="menu-item">Bağlam Gezgini</button>
-    <button class="menu-item">Kelime Kartları</button>
-    <button class="menu-item">Evde İngilizce</button>
-    <button class="menu-item">İşte İngilizce</button>
-    <button class="menu-item">Dışarıda İngilizce</button>
-    <button class="menu-item">Seyahat</button>
-    <button class="menu-item">YDS Modülü</button>
-    <button class="menu-item">İlerleme</button>
-  </nav>
-</aside>
-
-<main class="content">
-  <header class="topbar">
-    <div>
-      <h2 id="pageTitle">English Master Dashboard</h2>
-      <p id="pageSubtitle">Context is everything</p>
-    </div>
-
-    <div class="language-toggle">
-      <button id="trBtn" class="active">TR</button>
-      <button id="enBtn">EN</button>
-    </div>
-  </header>
-
-  <section class="hero">
-    <div class="hero-content">
-      <h3>Bugünün Hedefi</h3>
-      <p>20 kelime • 10 bağlam • 15 dakika konuşma</p>
-    </div>
-    <button class="start-btn">Çalışmaya Başla</button>
-  </section>
-
-  <section class="stats">
-    <div class="stat-card">
-      <span>Çalışma Serisi</span>
-      <strong>18 Gün</strong>
-    </div>
-    <div class="stat-card">
-      <span>Öğrenilen Kelime</span>
-      <strong>1,248</strong>
-    </div>
-    <div class="stat-card">
-      <span>Bağlam</span>
-      <strong>3,420</strong>
-    </div>
-    <div class="stat-card">
-      <span>Konuşma</span>
-      <strong>42 Saat</strong>
-    </div>
-  </section>
-
-  <section class="context-panel">
-    <div class="section-header">
-      <h3>Bağlam Gezgini</h3>
-      <span>Context Explorer</span>
-    </div>
-
-    <input
-      type="text"
-      id="searchInput"
-      placeholder="Bir kelime yaz: get, run, make, take..."
-    />
-
-    <div id="contextResults" class="context-results">
-      <div class="context-item">
-        <div class="context-tag">Ev</div>
-        <div class="context-text">
-          <strong>get home</strong>
-          <p>Eve varmak</p>
-        </div>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LinguaContext Cafer</title>
+<style>
+:root{
+  --bg:#0b0b0b;
+  --panel:#151515;
+  --panel2:#1c1c1c;
+  --gold:#f5c542;
+  --text:#f5f5f5;
+  --muted:#9a9a9a;
+  --border:#2b2b2b;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;
+}
+.container{
+  max-width:460px;
+  margin:0 auto;
+  min-height:100vh;
+  padding:20px;
+}
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:24px;
+}
+.logo{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.logo-box{
+  width:48px;
+  height:48px;
+  border-radius:14px;
+  background:linear-gradient(135deg,#f5c542,#d9aa2b);
+  color:#111;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:800;
+  box-shadow:0 0 18px rgba(245,197,66,.35);
+}
+.logo h1{
+  color:var(--gold);
+  font-size:24px;
+}
+.logo p{
+  color:var(--muted);
+  font-size:13px;
+}
+.lang{
+  display:flex;
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:999px;
+  overflow:hidden;
+}
+.lang button{
+  background:transparent;
+  color:var(--text);
+  border:none;
+  padding:8px 14px;
+}
+.lang .active{
+  background:var(--gold);
+  color:#111;
+  font-weight:700;
+}
+.hero{
+  background:linear-gradient(135deg,#1a1a1a,#111);
+  border:1px solid var(--border);
+  border-radius:22px;
+  padding:22px;
+  margin-bottom:22px;
+}
+.hero h2{
+  color:var(--gold);
+  margin-bottom:8px;
+}
+.hero p{
+  color:var(--muted);
+  margin-bottom:18px;
+}
+.start{
+  width:100%;
+  background:linear-gradient(135deg,#f5c542,#d9aa2b);
+  color:#111;
+  border:none;
+  padding:14px;
+  border-radius:14px;
+  font-weight:700;
+}
+.stats{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+  margin-bottom:22px;
+}
+.card{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:18px;
+}
+.card small{
+  color:var(--muted);
+}
+.card strong{
+  display:block;
+  color:var(--gold);
+  font-size:26px;
+  margin-top:8px;
+}
+.section{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:22px;
+  padding:20px;
+  margin-bottom:22px;
+}
+.section h3{
+  color:var(--gold);
+  margin-bottom:16px;
+}
+.search{
+  width:100%;
+  background:#101010;
+  color:var(--text);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:14px;
+  margin-bottom:16px;
+}
+.item{
+  background:#131313;
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:16px;
+  margin-bottom:12px;
+}
+.item:last-child{
+  margin-bottom:0;
+}
+.tag{
+  color:var(--gold);
+  font-weight:700;
+  margin-bottom:6px;
+}
+.item strong{
+  display:block;
+  margin-bottom:6px;
+}
+.item p{
+  color:var(--muted);
+}
+.grid{
+  display:grid;
+  gap:14px;
+}
+.topic{
+  background:#131313;
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:16px;
+}
+.topic h4{
+  color:var(--gold);
+  margin-bottom:10px;
+}
+.topic ul{
+  padding-left:18px;
+  color:var(--muted);
+}
+.bottom{
+  position:fixed;
+  left:50%;
+  transform:translateX(-50%);
+  bottom:16px;
+  width:min(420px,calc(100% - 24px));
+  background:#121212;
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:10px 12px;
+  display:flex;
+  justify-content:space-around;
+}
+.bottom div{
+  color:var(--muted);
+  text-align:center;
+  font-size:12px;
+}
+.bottom .active{
+  color:var(--gold);
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="logo">
+      <div class="logo-box">LC</div>
+      <div>
+        <h1>LinguaContext</h1>
+        <p>Cafer</p>
       </div>
-
-      <div class="context-item">
-        <div class="context-tag">İş</div>
-        <div class="context-text">
-          <strong>get promoted</strong>
-          <p>Terfi almak</p>
-        </div>
-      </div>
-
-      <div class="context-item">
-        <div class="context-tag">Günlük</div>
-        <div class="context-text">
-          <strong>get used to</strong>
-          <p>Alışmak</p>
-        </div>
-      </div>
     </div>
-  </section>
-
-  <section class="daily-grid">
-    <div class="daily-card">
-      <h4>Evde İngilizce</h4>
-      <ul>
-        <li>I’m doing the laundry.</li>
-        <li>Could you set the table?</li>
-        <li>The food is almost ready.</li>
-      </ul>
-    </div>
-
-    <div class="daily-card">
-      <h4>İşte İngilizce</h4>
-      <ul>
-        <li>Let’s schedule a meeting.</li>
-        <li>I’ll send the report.</li>
-        <li>Could you clarify that point?</li>
-      </ul>
-    </div>
-
-    <div class="daily-card">
-      <h4>Dışarıda İngilizce</h4>
-      <ul>
-        <li>Can I pay by card?</li>
-        <li>I’m just looking.</li>
-        <li>Where is the nearest station?</li>
-      </ul>
-    </div>
-
-    <div class="daily-card">
-      <h4>Seyahat İngilizcesi</h4>
-      <ul>
-        <li>I have a reservation.</li>
-        <li>Where is the boarding gate?</li>
-        <li>Could I have a window seat?</li>
-      </ul>
-    </div>
-  </section>
-</main>
-
+<div class="lang">
+  <button class="active">TR</button>
+  <button>EN</button>
 </div>
-
-<script src="app.js"></script>
-
-</body> </html>
+  </div>
+  <div class="hero">
+    <h2>English Master Dashboard</h2>
+    <p>Context is everything</p>
+    <button class="start">Çalışmaya Başla</button>
+  </div>
+  <div class="stats">
+    <div class="card">
+      <small>Çalışma Serisi</small>
+      <strong>18</strong>
+    </div>
+<div class="card">
+  <small>Bugünkü Hedef</small>
+  <strong>20</strong>
+</div>
+<div class="card">
+  <small>Bağlam</small>
+  <strong>3420</strong>
+</div>
+<div class="card">
+  <small>Konuşma</small>
+  <strong>42s</strong>
+</div>
+  </div>
+  <div class="section">
+    <h3>Bağlam Gezgini</h3>
+<input class="search" id="search" placeholder="Bir kelime yaz: get, run, make, take">
+<div id="results">
+  <div class="item">
+    <div class="tag">Ev</div>
+    <strong>get home</strong>
+    <p>Eve varmak</p>
+  </div>
+  <div class="item">
+    <div class="tag">İş</div>
+    <strong>get promoted</strong>
+    <p>Terfi almak</p>
+  </div>
+  <div class="item">
+    <div class="tag">Günlük</div>
+    <strong>get used to</strong>
+    <p>Alışmak</p>
+  </div>
+</div>
+  </div>
+  <div class="section">
+    <h3>Günlük İngilizce</h3>
+<div class="grid">
+  <div class="topic">
+    <h4>Evde İngilizce</h4>
+    <ul>
+      <li>I’m doing the laundry.</li>
+      <li>Could you set the table?</li>
+      <li>The food is almost ready.</li>
+    </ul>
+  </div>
+  <div class="topic">
+    <h4>İşte İngilizce</h4>
+    <ul>
+      <li>Let’s schedule a meeting.</li>
+      <li>I’ll send the report.</li>
+      <li>Could you clarify that point?</li>
+    </ul>
+  </div>
+  <div class="topic">
+    <h4>Dışarıda İngilizce</h4>
+    <ul>
+      <li>Can I pay by card?</li>
+      <li>I’m just looking.</li>
+      <li>Where is the nearest station?</li>
+    </ul>
+  </div>
+</div>
+  </div>
+</div>
+<div class="bottom">
+  <div class="active">🏠<br>Dashboard</div>
+  <div>🔍<br>Bağlam</div>
+  <div>🌐<br>Çeviri</div>
+  <div>📚<br>Kelimeler</div>
+  <div>📈<br>İlerleme</div>
+</div>
+<script>
+const db={
+  get:[
+    ['Ev','get home','Eve varmak'],
+    ['İş','get promoted','Terfi almak'],
+    ['Günlük','get used to','Alışmak']
+  ],
+  run:[
+    ['Ev','run the washing machine','Çamaşır makinesini çalıştırmak'],
+    ['İş','run a meeting','Toplantıyı yönetmek'],
+    ['Günlük','run late','Geç kalmak']
+  ],
+  make:[
+    ['Karar','make a decision','Karar vermek'],
+    ['İlerleme','make progress','İlerleme kaydetmek'],
+    ['Kontrol','make sure','Emin olmak']
+  ]
+};
+const search=document.getElementById('search');
+const results=document.getElementById('results');
+search.addEventListener('input',e=>{
+  const v=e.target.value.toLowerCase().trim();
+  if(!v){return;}
+  const list=db[v];
+  if(!list){
+    results.innerHTML='<div class="item"><div class="tag">Sonuç</div><strong>Bulunamadı</strong><p>Bu kelime veritabanında henüz yok.</p></div>';
+    return;
+  }
+  results.innerHTML=list.map(i=>`
+    <div class="item">
+      <div class="tag">${i[0]}</div>
+      <strong>${i[1]}</strong>
+      <p>${i[2]}</p>
+    </div>
+  `).join('');
+});
+</script>
+</body>
+</html>
