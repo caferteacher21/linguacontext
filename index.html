@@ -335,6 +335,31 @@ search.addEventListener('input',e=>{
     </div>
   `).join('');
 });
+  function startLesson(){
+  document.getElementById('dashboard').style.display='none';
+  document.getElementById('lessonScreen').style.display='block';
+}
+
+function finishLesson(){
+  alert('Tebrikler! Gün 1 tamamlandı. Cafer Score +10');
+  document.getElementById('lessonScreen').style.display='none';
+  document.getElementById('dashboard').style.display='block';
+}
 </script>
+  <div id="lessonScreen" style="display:none;background:#0b0b0b;min-height:100vh;padding:24px;color:#f5f5f5;">
+  <h1 style="color:#f5c542;">Gün 1 — Evde İngilizce</h1>
+  <p>15 dakikalık çalışma</p>
+
+  <div style="background:#151515;border:1px solid #2b2b2b;border-radius:18px;padding:20px;margin:20px 0;">
+    <h3 style="color:#f5c542;">Bugünün kelimesi</h3>
+    <h2>get home</h2>
+    <p>Eve varmak</p>
+  </div>
+
+  <button onclick="finishLesson()" style="width:100%;background:#f5c542;color:#111;border:none;padding:16px;border-radius:14px;font-weight:700;">
+    Dersi Tamamla
+  </button>
+</div>
+
 </body>
 </html>
