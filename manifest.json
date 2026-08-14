@@ -1,0 +1,10 @@
+{
+  "name": "LinguaContext Cafer",
+  "short_name": "LinguaCafer",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0F0F0F",
+  "theme_color": "#0F0F0F",
+  "description": "Bağlam odaklı İngilizce öğrenme uygulaması",
+  "icons": []
+}
